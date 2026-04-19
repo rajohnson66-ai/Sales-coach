@@ -1,1 +1,909 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sales Edge</title></head><body style="background:#07090f;color:#e8b84b;font-family:sans-serif;text-align:center;padding:40px 20px"><h1>⚡ SALES EDGE</h1><p id="s" style="color:#8a96aa">Connecting...</p><script>const p1="sk-ant-api03-0gswmx96qnMVoak-a3b2m--o4ia24jia_xxqy8EEEgsd9";const p2="O3AuhVzkQ0_R8KeUHjo9LgOSKX7odSzZmgC5tSs5Q-sUBs2AAA";const K=p1+p2;async function t(){const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":K,"anthropic-version":"2023-06-01"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:50,messages:[{role:"user",content:"Say only: Sales Edge API is working!"}]})});const d=await r.json();document.getElementById("s").style.color="#2ecc8a";document.getElementById("s").textContent=d.content[0].text;}t().catch(e=>{document.getElementById("s").style.color="#e05555";document.getElementById("s").textContent="Error: "+e;});</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sales Edge — Complete Sales Coach</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#07090f; --surface:#0e1118; --s2:#161b26; --s3:#1e2535;
+  --border:#1f2738; --b2:#2a3348;
+  --gold:#e8b84b; --gold2:#f5d080;
+  --blue:#3d8ef0; --green:#2ecc8a; --red:#e05555; --purple:#8b6fe8; --orange:#e8814b;
+  --text:#cdd5e0; --t2:#8a96aa; --muted:#4a5568;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;display:flex;flex-direction:column}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 40% at 50% -10%,rgba(61,142,240,.06) 0%,transparent 70%),radial-gradient(ellipse 40% 30% at 90% 90%,rgba(232,184,75,.04) 0%,transparent 60%);pointer-events:none;z-index:0}
+
+/* ── HEADER ── */
+header{position:relative;z-index:200;background:rgba(14,17,24,.97);border-bottom:1px solid var(--border);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex-shrink:0}
+.logo{display:flex;align-items:center;gap:9px}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 0 18px rgba(232,184,75,.3);flex-shrink:0}
+.logo-text{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;letter-spacing:2.5px;color:#fff}
+.logo-text span{color:var(--gold)}
+.logo-sub{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:1.5px;margin-top:-2px}
+.hdr-right{display:flex;align-items:center;gap:8px}
+.live-pill{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;padding:3px 8px;border:1px solid var(--green);color:var(--green);border-radius:3px;display:flex;align-items:center;gap:4px;background:rgba(46,204,138,.05)}
+.ldot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.menu-btn{width:34px;height:34px;background:var(--s2);border:1px solid var(--b2);border-radius:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t2);font-size:15px;transition:all .15s}
+.menu-btn:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ── TAB BAR ── */
+.tab-bar{display:flex;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;position:relative;z-index:100;overflow-x:auto;scrollbar-width:none}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab{flex:1;min-width:60px;padding:10px 6px 8px;text-align:center;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;font-size:10px;color:var(--muted);font-family:'Inter',sans-serif;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:3px;white-space:nowrap}
+.tab .ti{font-size:16px}
+.tab.active{border-bottom-color:var(--gold);color:var(--gold)}
+.tab:hover{color:var(--t2)}
+
+/* ── LAYOUT ── */
+.app{display:flex;flex:1;overflow:hidden;position:relative;z-index:1}
+
+/* ── DRAWER ── */
+.overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.75);backdrop-filter:blur(4px)}
+.overlay.open{display:block}
+.drawer{position:fixed;top:0;left:0;width:290px;height:100%;background:var(--surface);border-right:1px solid var(--border);z-index:400;transform:translateX(-100%);transition:transform .25s ease;overflow-y:auto;display:flex;flex-direction:column;padding-top:54px}
+.drawer.open{transform:translateX(0)}
+.drawer::-webkit-scrollbar{width:2px}
+.drawer::-webkit-scrollbar-thumb{background:var(--b2)}
+@media(min-width:780px){
+  .drawer{position:relative;top:auto;left:auto;transform:none!important;height:100%;padding-top:0;width:270px;min-width:270px}
+  .overlay{display:none!important}
+  .menu-btn{display:none}
+}
+
+/* ── SIDEBAR ── */
+.sb{padding:13px;border-bottom:1px solid var(--border)}
+.sb-ttl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+.url-in{width:100%;background:var(--bg);border:1px solid var(--b2);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:11px;padding:9px 10px;border-radius:7px;outline:none;transition:border-color .2s}
+.url-in:focus{border-color:var(--gold)}
+.url-in::placeholder{color:var(--muted)}
+.go-btn{width:100%;margin-top:7px;padding:11px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#080a0e;border:none;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;letter-spacing:2px;border-radius:7px;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(232,184,75,.2)}
+.go-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(232,184,75,.3)}
+.go-btn:disabled{background:var(--s3);color:var(--muted);cursor:not-allowed;transform:none;box-shadow:none}
+.dc-name{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;letter-spacing:.5px;color:#fff;margin-bottom:4px}
+.dc-meta{font-size:10px;color:var(--t2);line-height:1.7}
+.dc-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px}
+.tag{font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 6px;border-radius:3px}
+.tg{background:rgba(232,184,75,.1);border:1px solid rgba(232,184,75,.25);color:var(--gold)}
+.tb{background:rgba(61,142,240,.1);border:1px solid rgba(61,142,240,.25);color:var(--blue)}
+.tr{background:rgba(224,85,85,.1);border:1px solid rgba(224,85,85,.25);color:var(--red)}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:9px}
+.sc{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px;text-align:center}
+.sn{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:var(--gold);line-height:1}
+.sl{font-size:8px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:2px;font-family:'JetBrains Mono',monospace}
+.cbt{width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--border);color:var(--t2);font-family:'Inter',sans-serif;font-size:11px;border-radius:6px;cursor:pointer;text-align:left;transition:all .15s;margin-bottom:4px;display:flex;align-items:center;gap:7px}
+.cbt:hover{border-color:var(--gold);color:var(--text)}
+.cbt.act{border-color:var(--gold);color:var(--gold);background:rgba(232,184,75,.06)}
+.ph-hdr{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:3px 7px;border-radius:3px;margin:5px 0 3px;display:inline-block}
+.pem{background:rgba(232,184,75,.1);color:var(--gold);border:1px solid rgba(232,184,75,.2)}
+.pbu{background:rgba(46,204,138,.1);color:var(--green);border:1px solid rgba(46,204,138,.2)}
+.pra{background:rgba(61,142,240,.1);color:var(--blue);border:1px solid rgba(61,142,240,.2)}
+.pex{background:rgba(139,111,232,.1);color:var(--purple);border:1px solid rgba(139,111,232,.2)}
+.sr{display:flex;align-items:center;gap:7px;padding:6px 7px;border-radius:6px;cursor:pointer;font-size:11px;color:var(--muted);border:1px solid transparent;transition:all .15s;margin-bottom:2px}
+.sr:hover{background:var(--s2);color:var(--text)}
+.sr.act{background:rgba(232,184,75,.06);border-color:rgba(232,184,75,.25);color:var(--gold)}
+.sr.done{color:var(--green)}
+.sn2{font-family:'JetBrains Mono',monospace;font-size:9px;width:17px;height:17px;border:1px solid currentColor;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* ── MAIN PANEL ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.panel{display:none;flex:1;flex-direction:column;overflow:hidden}
+.panel.show{display:flex}
+
+/* ── COACH PANEL ── */
+.chat-hdr{padding:11px 14px;background:rgba(14,17,24,.9);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;flex-shrink:0}
+.ch-title{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;letter-spacing:1.5px;color:#fff}
+.ch-sub{font-size:10px;color:var(--t2);font-family:'JetBrains Mono',monospace;margin-top:1px}
+.step-pill{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;padding:4px 9px;border-radius:4px;background:rgba(232,184,75,.1);border:1px solid rgba(232,184,75,.3);color:var(--gold);white-space:nowrap}
+.msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:11px;scroll-behavior:smooth}
+.msgs::-webkit-scrollbar{width:3px}
+.msgs::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+
+/* Welcome screen */
+.welcome{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px 20px}
+.wi{width:60px;height:60px;background:linear-gradient(135deg,rgba(232,184,75,.15),rgba(232,184,75,.05));border:1px solid rgba(232,184,75,.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:14px;box-shadow:0 0 28px rgba(232,184,75,.1)}
+.welcome h2{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;letter-spacing:2px;color:#fff;margin-bottom:6px}
+.welcome p{font-size:12px;color:var(--t2);max-width:290px;line-height:1.7;margin-bottom:18px}
+.wsteps{display:flex;flex-direction:column;gap:7px;text-align:left;width:100%;max-width:270px}
+.ws{display:flex;align-items:flex-start;gap:9px;font-size:11px;color:var(--t2)}
+.wsn{width:19px;height:19px;border-radius:50%;background:rgba(232,184,75,.1);border:1px solid rgba(232,184,75,.2);color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+
+/* Messages */
+.msg{display:flex;gap:8px;max-width:94%;animation:su .2s ease}
+.msg.user{align-self:flex-end;flex-direction:row-reverse}
+@keyframes su{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.av{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;flex-shrink:0;margin-top:2px}
+.av.ai{background:linear-gradient(135deg,rgba(232,184,75,.2),rgba(232,184,75,.05));border:1px solid rgba(232,184,75,.3);color:var(--gold)}
+.av.rep{background:rgba(61,142,240,.1);border:1px solid rgba(61,142,240,.25);color:var(--blue)}
+.bub{background:var(--surface);border:1px solid var(--b2);border-radius:10px;padding:11px 13px;font-size:13px;line-height:1.65;color:var(--text)}
+.msg.user .bub{background:rgba(61,142,240,.07);border-color:rgba(61,142,240,.2);border-radius:10px 2px 10px 10px}
+.msg.ai .bub{border-radius:2px 10px 10px 10px}
+.bub b{color:var(--gold);font-weight:600}
+.bub i{color:var(--orange);font-style:normal;font-weight:500}
+
+/* Special cards */
+.sc-card{margin-top:9px;background:rgba(61,142,240,.04);border:1px solid rgba(61,142,240,.2);border-left:3px solid var(--blue);border-radius:0 6px 6px 0;padding:9px 11px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.65;color:#90b8e0}
+.hc-card{margin-top:9px;background:rgba(232,184,75,.04);border:1px solid rgba(232,184,75,.2);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:9px 11px;font-size:12px}
+.ac-card{margin-top:9px;background:rgba(46,204,138,.04);border:1px solid rgba(46,204,138,.18);border-left:3px solid var(--green);border-radius:0 6px 6px 0;padding:9px 11px;font-size:12px}
+.ec-card{margin-top:9px;background:rgba(224,85,85,.04);border:1px solid rgba(224,85,85,.18);border-left:3px solid var(--red);border-radius:0 6px 6px 0;padding:9px 11px;font-size:12px}
+.em-card{margin-top:9px;background:rgba(139,111,232,.04);border:1px solid rgba(139,111,232,.18);border-left:3px solid var(--purple);border-radius:0 6px 6px 0;padding:9px 11px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.65;color:#c4b4f0}
+.clbl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+.sc-card .clbl{color:var(--blue)} .hc-card .clbl{color:var(--gold)} .ac-card .clbl{color:var(--green)} .ec-card .clbl{color:var(--red)} .em-card .clbl{color:var(--purple)}
+
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.chip{padding:6px 11px;background:var(--s2);border:1px solid var(--b2);border-radius:20px;font-size:11px;cursor:pointer;transition:all .15s;color:var(--text);white-space:nowrap}
+.chip:hover{border-color:var(--gold);color:var(--gold);background:rgba(232,184,75,.05)}
+.chip.p{border-color:rgba(232,184,75,.35);color:var(--gold);background:rgba(232,184,75,.06)}
+.chip.blue{border-color:rgba(61,142,240,.35);color:var(--blue);background:rgba(61,142,240,.06)}
+.chip.grn{border-color:rgba(46,204,138,.35);color:var(--green);background:rgba(46,204,138,.06)}
+.chip.pur{border-color:rgba(139,111,232,.35);color:var(--purple);background:rgba(139,111,232,.06)}
+
+/* Typing */
+.typing{display:flex;gap:8px;animation:su .2s ease}
+.tb2{background:var(--surface);border:1px solid var(--b2);border-radius:2px 10px 10px 10px;padding:13px 15px;display:flex;gap:4px;align-items:center}
+.tb2 span{width:5px;height:5px;border-radius:50%;background:var(--muted);animation:tb 1.2s infinite}
+.tb2 span:nth-child(2){animation-delay:.2s}.tb2 span:nth-child(3){animation-delay:.4s}
+@keyframes tb{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px);background:var(--gold)}}
+
+/* Input bar */
+.ibar{padding:10px 12px;background:rgba(14,17,24,.95);border-top:1px solid var(--border);display:flex;gap:7px;align-items:center;flex-shrink:0}
+.cin{flex:1;background:var(--s2);border:1px solid var(--b2);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;padding:10px 14px;border-radius:22px;outline:none;transition:border-color .2s}
+.cin:focus{border-color:var(--gold)}
+.cin::placeholder{color:var(--muted)}
+.cin:disabled{opacity:.5}
+.sbtn{width:40px;height:40px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:15px;transition:all .15s;box-shadow:0 2px 12px rgba(232,184,75,.25)}
+.sbtn:hover{transform:scale(1.08)}
+.sbtn:disabled{background:var(--s3);cursor:not-allowed;transform:none;box-shadow:none}
+
+/* ── COMMS PANEL ── */
+.comms-panel{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px}
+.comms-panel::-webkit-scrollbar{width:3px}
+.comms-panel::-webkit-scrollbar-thumb{background:var(--b2)}
+.section-hdr{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;color:#fff;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.comm-card{background:var(--surface);border:1px solid var(--b2);border-radius:10px;padding:14px;margin-bottom:10px}
+.cc-type{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.cc-title{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:8px}
+.cc-body{font-size:12px;color:var(--t2);line-height:1.7;font-family:'JetBrains Mono',monospace;white-space:pre-wrap;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;margin-bottom:10px;max-height:200px;overflow-y:auto}
+.cc-btns{display:flex;gap:7px;flex-wrap:wrap}
+.cc-btn{padding:7px 14px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;border:none;transition:all .15s}
+.cc-btn.copy{background:var(--s3);color:var(--text);border:1px solid var(--b2)}
+.cc-btn.copy:hover{border-color:var(--gold);color:var(--gold)}
+.cc-btn.gen{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#080a0e;font-weight:700}
+.gen-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.gen-card{background:var(--surface);border:1px solid var(--b2);border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;text-align:center}
+.gen-card:hover{border-color:var(--gold);background:rgba(232,184,75,.04)}
+.gen-icon{font-size:24px;margin-bottom:6px}
+.gen-label{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;color:#fff}
+.gen-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.no-dealer{display:flex;flex-direction:column;align-items:center;justify-content:center;height:200px;color:var(--muted);text-align:center;gap:8px}
+.no-dealer .ni{font-size:32px}
+.no-dealer p{font-size:12px;line-height:1.6;max-width:240px}
+
+/* ── DEALS PANEL ── */
+.deals-panel{flex:1;overflow-y:auto;padding:14px}
+.deals-panel::-webkit-scrollbar{width:3px}
+.deals-panel::-webkit-scrollbar-thumb{background:var(--b2)}
+.deal-card{background:var(--surface);border:1px solid var(--b2);border-radius:10px;padding:13px;margin-bottom:10px;cursor:pointer;transition:all .2s}
+.deal-card:hover{border-color:rgba(232,184,75,.3)}
+.deal-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.deal-name{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:#fff}
+.deal-score{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:var(--gold)}
+.deal-meta{font-size:11px;color:var(--t2);margin-bottom:8px}
+.deal-prog{background:var(--bg);border-radius:3px;height:4px;overflow:hidden;margin-bottom:7px}
+.deal-bar{height:100%;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:3px;transition:width .5s}
+.deal-contacts{display:flex;gap:5px;flex-wrap:wrap}
+.dc-chip{font-size:9px;padding:2px 7px;border-radius:3px;font-family:'JetBrains Mono',monospace}
+.dcc-warm{background:rgba(46,204,138,.1);border:1px solid rgba(46,204,138,.2);color:var(--green)}
+.dcc-cold{background:rgba(74,85,104,.1);border:1px solid rgba(74,85,104,.2);color:var(--muted)}
+.dcc-hot{background:rgba(232,184,75,.1);border:1px solid rgba(232,184,75,.2);color:var(--gold)}
+.add-deal-btn{width:100%;padding:12px;background:var(--s2);border:1px solid var(--b2);border-radius:10px;color:var(--t2);font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.add-deal-btn:hover{border-color:var(--gold);color:var(--gold)}
+.empty-deals{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;color:var(--muted);gap:10px}
+.empty-deals .ei{font-size:36px}
+.empty-deals p{font-size:12px;max-width:220px;line-height:1.6}
+
+/* ── PLAYBOOK PANEL ── */
+.playbook-panel{flex:1;overflow-y:auto;padding:14px}
+.playbook-panel::-webkit-scrollbar{width:3px}
+.playbook-panel::-webkit-scrollbar-thumb{background:var(--b2)}
+.pb-step{background:var(--surface);border:1px solid var(--b2);border-radius:10px;margin-bottom:10px;overflow:hidden;cursor:pointer}
+.pb-hdr{padding:13px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pb-left{display:flex;align-items:center;gap:10px}
+.pb-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;flex-shrink:0}
+.pb-num.em{background:rgba(232,184,75,.15);border:1px solid rgba(232,184,75,.3);color:var(--gold)}
+.pb-num.bu{background:rgba(46,204,138,.15);border:1px solid rgba(46,204,138,.3);color:var(--green)}
+.pb-num.ra{background:rgba(61,142,240,.15);border:1px solid rgba(61,142,240,.3);color:var(--blue)}
+.pb-num.ex{background:rgba(139,111,232,.15);border:1px solid rgba(139,111,232,.3);color:var(--purple)}
+.pb-info{}
+.pb-title{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#fff;letter-spacing:.5px}
+.pb-phase{font-size:9px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:1px;margin-top:1px}
+.pb-arrow{color:var(--muted);font-size:12px;transition:transform .2s}
+.pb-body{display:none;padding:0 14px 13px;border-top:1px solid var(--border)}
+.pb-body.open{display:block}
+.pb-goal{background:var(--bg);border-left:3px solid var(--gold);padding:8px 10px;border-radius:0 5px 5px 0;font-size:12px;color:var(--t2);line-height:1.6;margin-bottom:8px;margin-top:10px}
+.pb-rule{font-size:11px;color:var(--t2);line-height:1.6;margin-bottom:6px;display:flex;gap:6px}
+.pb-rule::before{content:"→";color:var(--gold);flex-shrink:0}
+
+/* ── COPY FEEDBACK ── */
+.copy-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--green);color:#080a0e;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;padding:8px 18px;border-radius:6px;z-index:1000;opacity:0;transition:opacity .2s;pointer-events:none}
+.copy-toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<div class="copy-toast" id="toast">COPIED!</div>
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+
+<!-- DRAWER -->
+<div class="drawer" id="drawer">
+  <div class="sb">
+    <div class="sb-ttl">Dealer Website</div>
+    <input class="url-in" id="dealerUrl" type="url" placeholder="e.g. smithfordmt.com" autocomplete="off" autocorrect="off" autocapitalize="off" />
+    <button class="go-btn" id="goBtn" onclick="startAnalysis()">⚡ ANALYZE DEALER</button>
+  </div>
+  <div class="sb" id="dealerSec" style="display:none">
+    <div class="sb-ttl">Dealer Intelligence</div>
+    <div id="dealerCard"></div>
+    <div class="sg">
+      <div class="sc"><div class="sn" id="scoreDisp">—</div><div class="sl">Conv. Score</div></div>
+      <div class="sc"><div class="sn" id="stepDisp">1</div><div class="sl">ITD Step</div></div>
+    </div>
+  </div>
+  <div class="sb" id="contactSec" style="display:none">
+    <div class="sb-ttl">Active Contact</div>
+    <div id="contactBtns"></div>
+  </div>
+  <div class="sb" id="stepsSec" style="display:none">
+    <div class="sb-ttl">ITD Process — 10 Steps</div>
+    <div id="stepList"></div>
+  </div>
+  <div class="sb" id="hurtsSec" style="display:none">
+    <div class="sb-ttl">Documented Hurts</div>
+    <div id="hurtList"><div style="font-size:11px;color:var(--muted);line-height:1.6">Hurts appear here as you discover them.</div></div>
+  </div>
+</div>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    <div>
+      <div class="logo-text">SALES <span>EDGE</span></div>
+      <div class="logo-sub">DMS CONVERSION COACH</div>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div class="live-pill"><div class="ldot"></div>AI LIVE</div>
+    <div class="menu-btn" onclick="toggleDrawer()">☰</div>
+  </div>
+</header>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <div class="tab active" id="tab-coach" onclick="showTab('coach')"><span class="ti">🎯</span>Coach</div>
+  <div class="tab" id="tab-comms" onclick="showTab('comms')"><span class="ti">📧</span>Comms</div>
+  <div class="tab" id="tab-deals" onclick="showTab('deals')"><span class="ti">📊</span>Deals</div>
+  <div class="tab" id="tab-play" onclick="showTab('play')"><span class="ti">📖</span>Playbook</div>
+</div>
+
+<div class="app">
+  <div class="drawer" id="sidebarDesktop" style="display:none"></div>
+
+  <div class="main">
+
+    <!-- ── COACH TAB ── -->
+    <div class="panel show" id="panel-coach">
+      <div class="chat-hdr">
+        <div>
+          <div class="ch-title" id="chatTitle">SALES EDGE COACH</div>
+          <div class="ch-sub" id="chatSub">Enter dealer URL in menu · ITD 10-Step Process</div>
+        </div>
+        <div class="step-pill" id="stepPill">STEP 1: HURT</div>
+      </div>
+      <div class="msgs" id="msgs">
+        <div class="welcome" id="welcome">
+          <div class="wi">⚡</div>
+          <h2>SALES EDGE</h2>
+          <p>Your complete AI sales coach for converting Autosoft dealers to CDK. Built on the official ITD 10-step process.</p>
+          <div class="wsteps">
+            <div class="ws"><div class="wsn">1</div><span>Tap ☰ menu → enter dealer URL → tap Analyze</span></div>
+            <div class="ws"><div class="wsn">2</div><span>Get dealer intel + full ITD game plan instantly</span></div>
+            <div class="ws"><div class="wsn">3</div><span>Select your active contact — Controller, Service, Parts, Owner</span></div>
+            <div class="ws"><div class="wsn">4</div><span>Tell it what contacts said — get coached on every next move</span></div>
+            <div class="ws"><div class="wsn">5</div><span>Go to Comms tab for follow-up emails and call scripts</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="ibar">
+        <input class="cin" id="chatIn" placeholder="What happened in your last conversation?" disabled onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}" />
+        <button class="sbtn" id="sendBtn" onclick="sendMsg()" disabled>➤</button>
+      </div>
+    </div>
+
+    <!-- ── COMMS TAB ── -->
+    <div class="panel" id="panel-comms">
+      <div class="chat-hdr">
+        <div>
+          <div class="ch-title">COMMUNICATIONS HUB</div>
+          <div class="ch-sub">Emails · Call Scripts · Advocate Messages</div>
+        </div>
+      </div>
+      <div class="comms-panel" id="commsContent">
+        <div class="no-dealer">
+          <div class="ni">📧</div>
+          <p>Analyze a dealer first, then come here to generate follow-up emails and call scripts for every contact.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── DEALS TAB ── -->
+    <div class="panel" id="panel-deals">
+      <div class="chat-hdr">
+        <div>
+          <div class="ch-title">DEAL TRACKER</div>
+          <div class="ch-sub">Active pipeline · Goal: 5 closes by Dec 1</div>
+        </div>
+      </div>
+      <div class="deals-panel" id="dealsContent">
+        <div style="background:var(--surface);border:1px solid var(--b2);border-radius:10px;padding:14px;margin-bottom:12px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:8px">DECEMBER 1ST GOAL</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+            <div class="sc"><div class="sn" id="dealsActive">0</div><div class="sl">Active</div></div>
+            <div class="sc"><div class="sn" id="dealsClosed" style="color:var(--green)">0</div><div class="sl">Closed</div></div>
+            <div class="sc"><div class="sn" id="dealsNeeded" style="color:var(--red)">5</div><div class="sl">Needed</div></div>
+          </div>
+          <div style="margin-top:10px;background:var(--bg);border-radius:3px;height:6px;overflow:hidden">
+            <div id="goalBar" style="height:100%;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:3px;width:0%;transition:width .5s"></div>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:5px;font-family:'JetBrains Mono',monospace" id="goalText">0 of 5 closed · 5 remaining</div>
+        </div>
+        <div id="dealsList">
+          <div class="empty-deals">
+            <div class="ei">📋</div>
+            <p>Deals appear here automatically when you analyze a dealer. Track each one through all 10 ITD steps.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PLAYBOOK TAB ── -->
+    <div class="panel" id="panel-play">
+      <div class="chat-hdr">
+        <div>
+          <div class="ch-title">ITD PLAYBOOK</div>
+          <div class="ch-sub">All 10 steps · Rules · Goals</div>
+        </div>
+      </div>
+      <div class="playbook-panel" id="playbookContent"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════════════════
+const STEPS=[
+  {id:1,phase:'em',ph:'EMOTIONAL PHASE',label:'Hurt Discovery',short:'HURT',
+   goal:'Uncover the personal business pains of your contact. Never mention CDK.',
+   rules:['Ask open questions — listen 80%, talk 20%','Hurts are felt by PEOPLE, not just organizations','Never pitch, never mention CDK, never say "we" or "I"','Your job is to be curious, not to sell']},
+  {id:2,phase:'em',ph:'EMOTIONAL PHASE',label:'Qualify the Opportunity',short:'QUALIFY',
+   goal:'Confirm this is a real, fundable opportunity worth your full investment.',
+   rules:['Is the pain real and urgent?','Does the dealer have budget/ability to change?','Is there a decision timeline?','Who is the UDM — can you get access?']},
+  {id:3,phase:'em',ph:'EMOTIONAL PHASE',label:'Amplify the Hurt',short:'AMPLIFY',
+   goal:'Make the cost of doing nothing feel 5X greater than the cost of CDK.',
+   rules:['Monetize: calculate exact dollar cost of status quo','Personalize: make them feel the personal impact','Lift: show what they CANNOT achieve staying with Autosoft','Chain: link multiple Hurts together for maximum energy','Get them to verbalize the Hurt — their words are your ammunition']},
+  {id:4,phase:'em',ph:'EMOTIONAL PHASE',label:'Present Generic Solution',short:'PRESENT',
+   goal:'Propose how their Hurts could be fixed — generically. Let them buy you.',
+   rules:['NEVER say CDK, product names, "we" or "I"','Use "What if you could…" or "What if you had…"','Always restate the Hurt BEFORE presenting the solution','You are still in emotional phase — do not sell yet','Goal: get them nodding and asking for more']},
+  {id:5,phase:'buy',ph:'BUY-IN',label:'Confirm the Buy-In',short:'BUY-IN',
+   goal:'Customer makes emotional decision. Brain switches from System 1 to System 2.',
+   rules:['Watch for Buy-In signals: leaning forward, asking about next steps, "when could we…"','NOW arm them with sword and shield against E-Bombs','Provide case studies, references, customer success stories','Beware: Autosoft WILL try to drop E-Bombs to unhook their decision','Step 5 is the top of the triangle — everything changes here']},
+  {id:6,phase:'rat',ph:'RATIONAL PHASE',label:'Specs & Details / Demo',short:'DEMO',
+   goal:'Prove CDK solves their specific Hurts. Build rational conviction.',
+   rules:['You can now say "we" and "CDK" — you are the trusted advisor','Demo formula: Restate Hurt → Restate Generic Solution → Show Your Proof','EVERY demo must be tailored to THEIR specific Hurts','The demo is proof, not a sales pitch','Prepare sword and shield: case studies, references, proof points']},
+  {id:7,phase:'rat',ph:'RATIONAL PHASE',label:'Tailor the Solution',short:'TAILOR',
+   goal:'Get the customer customizing CDK. Ownership of decision transfers to them.',
+   rules:['Ask: "How would you want this to work for your team?"','When they customize — it becomes THEIR solution','Encourage UDM and stakeholders to shape the solution','The more they tailor, the harder it is for them to say no','This is where the decision ownership transfers from you to them']},
+  {id:8,phase:'rat',ph:'RATIONAL PHASE',label:'Validate Customer Conviction',short:'VALIDATE',
+   goal:'Have the UDM play back their commitment. Test conviction before contracting.',
+   rules:['Ask UDM to restate how CDK will work for their team','Who will lead implementation on their side?','What are the responsibilities of each party?','If conviction is weak — go back to Step 3 and re-amplify','If conviction is strong — contract is your next step']},
+  {id:9,phase:'exec',ph:'EXECUTION PHASE',label:'Contract / Approval',short:'CONTRACT',
+   goal:'Sign the contract. This should be a non-event — no begging required.',
+   rules:['If steps 6-7-8 were done right, customer is pressing YOU','All negotiating happened in Rational Phase — not here','No last-minute price discussions — value was established','Customer UDM should be driving urgency to get started','If they hesitate — conviction was not fully validated at Step 8']},
+  {id:10,phase:'exec',ph:'EXECUTION PHASE',label:'Implement & Farm Account',short:'EXECUTE',
+   goal:'Deliver on every promise. Build the long-term account relationship.',
+   rules:['Teamwork with CDK implementation is critical — attend key milestones','Document all Hurts and solutions in SFDC','Make sure implementation team knows exactly what was promised','Your credibility is built or broken at go-live','Farm the account: upsell, referrals, reference calls for future prospects']}
+];
+
+const CONTACTS=[
+  {id:'controller',label:'Controller / Office Mgr',icon:'💼'},
+  {id:'service',label:'Service Manager',icon:'🔧'},
+  {id:'parts',label:'Parts Manager',icon:'📦'},
+  {id:'owner',label:'Owner / Dealer Principal',icon:'🏆'}
+];
+
+const PHASE_META={
+  em:{label:'EMOTIONAL PHASE',cls:'pem'},
+  buy:{label:'BUY-IN',cls:'pbu'},
+  rat:{label:'RATIONAL PHASE',cls:'pra'},
+  exec:{label:'EXECUTION PHASE',cls:'pex'}
+};
+
+// ══════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════
+let dealer=null, history=[], step=1, contact='controller', hurts=[], deals=[];
+
+// ══════════════════════════════════════════════════════════
+// SYSTEM PROMPT
+// ══════════════════════════════════════════════════════════
+const SYS=`You are Sales Edge — a complete AI field sales coach for CDK Global reps converting small 1-2 rooftop dealerships from Autosoft DMS to CDK Global in ID, MT, WY, NE, SD, and ND. The rep's goal is 5 closed DMS deals by December 1st.
+
+You coach the full ITD (Influencing The Decision) 10-step triangle process AND all communications between visits.
+
+THE ITD TRIANGLE:
+
+EMOTIONAL PHASE — Steps 1-4 (NEVER mention CDK, product names, pricing, "we" or "I"):
+  Step 1 HURT DISCOVERY: Find personal business pains. Listen 80%. Ask open questions. Hurts are felt by PEOPLE.
+  Step 2 QUALIFY: Confirm real fundable opportunity. Is pain real? Budget available? Timeline exists? UDM accessible?
+  Step 3 AMPLIFY: 4 ways — Monetize (cost of status quo in dollars), Personalize (personal impact on them), Lift (what they can't achieve without CDK), Chain (link multiple Hurts). Hurt must feel 5X cost of solution. "Toughest competitor is DO NOTHING."
+  Step 4 PRESENT GENERIC SOLUTION: Use "What if you could…" never say CDK/we/I. Restate Hurt first. Let them buy YOU.
+
+BUY-IN — Step 5 (brain switches System 1 → System 2):
+  Step 5 CONFIRM BUY-IN: Watch for signals. ARM them with sword and shield (case studies, references, proof). Beware E-BOMBS.
+
+RATIONAL PHASE — Steps 6-8 (NOW say "we" and CDK specifics):
+  Step 6 DEMO: Hurt → Generic Solution → Your Proof. Tailored demo. Build conviction.
+  Step 7 TAILOR: Get them customizing CDK to their workflows. Ownership transfers.
+  Step 8 VALIDATE: UDM plays back commitment. Test conviction. If weak — re-amplify.
+
+EXECUTION PHASE:
+  Step 9 CONTRACT: Non-event. No begging. Customer pressing you.
+  Step 10 IMPLEMENT & FARM: Deliver promise. Document. Build relationship.
+
+COMMUNICATIONS COACHING:
+When asked, generate:
+- Follow-up call scripts (2-3 minutes, specific to what was discussed)
+- Follow-up emails (short, professional, restates their Hurt in their words — never pitches CDK in early steps)
+- Internal advocate emails (for Controller/Service/Parts to forward to owner)
+- Re-engagement scripts (when deal goes quiet)
+- E-Bomb response emails (counter Autosoft pushback)
+Always label these clearly with EMAIL: or CALLSCRIPT: or ADVOCATEEMAIL: prefix.
+
+AUTOSOFT HURTS BY CONTACT:
+Controller: manual month-end (2-3 days), manual journal entries, workarounds, weak reporting, slow support
+Service: paper RO workflow, no mobile write-up, slow RO close, poor OEM warranty integration, no recall lookup
+Parts: inventory inaccuracy, slow special order visibility, manual receiving, parts write-offs
+All: no digital retailing, compliance gaps, disconnected systems, no OEM data connectivity
+
+AMPLIFY MATH EXAMPLES:
+- Controller: "If month-end takes 3 days and your controller earns $60k/year, that's $750/month in labor on manual close alone"
+- Service: "If 10 ROs per day close one day late at $400 average, that's $4,000 in delayed cash flow daily"
+- Parts: "A 2% inventory variance on $500k parts inventory is $10,000 in write-offs per year"
+
+KEY RULES:
+- Use ITD language: Hurt, Amplify, Buy-In, UDM, E-Bomb, Tailor, Validate, Farm
+- When rep shares a conversation → extract Hurts, coach next move, provide scripts
+- Always connect to December 1st goal — create urgency
+- Coach internal advocates to carry message to owner (UDM)
+- Be direct, specific, tactical — rep is in the field`;
+
+// ══════════════════════════════════════════════════════════
+// DRAWER / NAV
+// ══════════════════════════════════════════════════════════
+function toggleDrawer(){
+  document.getElementById('drawer').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+}
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+function showTab(t){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('show'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+t).classList.add('show');
+  document.getElementById('tab-'+t).classList.add('active');
+  if(t==='play') buildPlaybook();
+  if(t==='comms') buildCommsUI();
+}
+
+// ══════════════════════════════════════════════════════════
+// ANALYZE DEALER
+// ══════════════════════════════════════════════════════════
+async function startAnalysis(){
+  const url=document.getElementById('dealerUrl').value.trim();
+  if(!url){document.getElementById('dealerUrl').focus();return;}
+  const btn=document.getElementById('goBtn');
+  btn.disabled=true;btn.textContent='ANALYZING…';
+  document.getElementById('welcome').style.display='none';
+  showTyping();
+  try{
+    const clean=url.replace(/^https?:\/\//,'').replace(/\/$/,'');
+    const p=`Analyze this Autosoft dealer for CDK ITD conversion: ${clean}
+Return ONLY valid JSON:
+{"dealerName":"...","brand":"...","location":"...","size":"Single Point","conversionScore":75,"scoreReason":"...","likelyHurts":{"controller":["h1","h2"],"service":["h1","h2"],"parts":["h1","h2"]},"udmProfile":"...","autoSoftWeaknesses":["w1","w2","w3"],"topAmplifiers":["a1","a2"]}`;
+    const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":"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","anthropic-version":"2023-06-01"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:900,messages:[{role:"user",content:p}]})});
+    const d=await r.json();
+    const txt=d.content?.[0]?.text||'{}';
+    try{dealer=JSON.parse(txt.replace(/```json|```/g,'').trim());}
+    catch{dealer={dealerName:clean.split('.')[0].replace(/-/g,' ').replace(/\b\w/g,l=>l.toUpperCase()),brand:"Unknown",location:"Territory",size:"Single Point",conversionScore:70,scoreReason:"Small rooftop Autosoft dealer",likelyHurts:{controller:["Slow month-end close","Manual accounting workarounds"],service:["Clunky RO workflow","Paper-based write-up"],parts:["Inventory accuracy gaps","Slow special order visibility"]},udmProfile:"Cost-conscious, loyal to Autosoft, fears disruption",autoSoftWeaknesses:["Dated fixed ops","Limited OEM integration","Weak reporting"],topAmplifiers:["Monthly hours lost × staff cost","ROs closed late × labor dollars"]};}
+    removeTyping();
+
+    // Add to deals
+    if(!deals.find(d=>d.name===dealer.dealerName)){
+      deals.push({name:dealer.dealerName,brand:dealer.brand,location:dealer.location,score:dealer.conversionScore,step:1,contacts:{controller:'cold',service:'cold',parts:'cold',owner:'cold'},closed:false});
+      updateDealsPanel();
+    }
+
+    // Show sidebar
+    ['dealerSec','contactSec','stepsSec','hurtsSec'].forEach(id=>document.getElementById(id).style.display='block');
+    document.getElementById('dealerCard').innerHTML=`<div class="dc-name">${dealer.dealerName}</div><div class="dc-meta">🏷 ${dealer.brand} · 📍 ${dealer.location} · 🏠 ${dealer.size}</div><div class="dc-tags">${dealer.autoSoftWeaknesses.map(w=>`<span class="tag tg">${w}</span>`).join('')}</div>`;
+    document.getElementById('scoreDisp').textContent=dealer.conversionScore;
+    document.getElementById('contactBtns').innerHTML=CONTACTS.map(c=>`<button class="cbt ${c.id===contact?'act':''}" id="cb-${c.id}" onclick="setContact('${c.id}')">${c.icon} ${c.label}</button>`).join('');
+    let ph='',sh='';
+    STEPS.forEach(s=>{
+      if(s.phase!==ph){sh+=`<div class="ph-hdr ${PHASE_META[s.phase].cls}">${PHASE_META[s.phase].label}</div>`;ph=s.phase;}
+      sh+=`<div class="sr" id="sr-${s.id}" onclick="jumpStep(${s.id})"><div class="sn2">${s.id}</div><span>${s.label}</span></div>`;
+    });
+    document.getElementById('stepList').innerHTML=sh;
+    document.getElementById('chatTitle').textContent=dealer.dealerName.toUpperCase();
+    document.getElementById('chatSub').textContent=`${dealer.brand} · ${dealer.location} · Score ${dealer.conversionScore}/100`;
+    setStep(1);
+
+    const init=`Dealer: ${dealer.dealerName} (${dealer.brand}, ${dealer.location}, ${dealer.size})
+Score: ${dealer.conversionScore}/100 — ${dealer.scoreReason}
+UDM: ${dealer.udmProfile}
+Autosoft weaknesses: ${dealer.autoSoftWeaknesses.join(', ')}
+Likely Controller Hurts: ${dealer.likelyHurts.controller.join(', ')}
+Likely Service Hurts: ${dealer.likelyHurts.service.join(', ')}
+Likely Parts Hurts: ${dealer.likelyHurts.parts.join(', ')}
+Top amplifiers: ${dealer.topAmplifiers.join(', ')}
+
+Give me:
+1. Who I call FIRST and the exact opening — Step 1 Hurt Discovery, no CDK mention
+2. Top 2 Hurts to listen for with the Controller
+3. Quick path to getting all 3 internal advocates (Controller, Service, Parts) warm enough to go to the owner
+4. What I need to hear from the owner to know this deal is on track`;
+
+    history=[];
+    const reply=await claude(init);
+    history=[{role:"user",content:init},{role:"assistant",content:reply}];
+    addMsg('ai',reply,getChips());
+    document.getElementById('chatIn').disabled=false;
+    document.getElementById('sendBtn').disabled=false;
+    closeDrawer();
+    buildCommsUI();
+  }catch(e){removeTyping();addMsg('ai','Error analyzing that URL. Check it and try again.');}
+  btn.disabled=false;btn.innerHTML='⚡ RE-ANALYZE';
+}
+
+// ══════════════════════════════════════════════════════════
+// CLAUDE API
+// ══════════════════════════════════════════════════════════
+async function claude(msg){
+  const msgs=[...history,{role:"user",content:msg}];
+  const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":"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","anthropic-version":"2023-06-01"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,system:SYS,messages:msgs})});
+  const d=await r.json();
+  return d.content?.[0]?.text||"Error — please try again.";
+}
+
+// ══════════════════════════════════════════════════════════
+// SEND MESSAGE
+// ══════════════════════════════════════════════════════════
+async function sendMsg(){
+  const inp=document.getElementById('chatIn');
+  const txt=inp.value.trim();
+  if(!txt)return;
+  inp.value='';
+  await doSend(txt);
+}
+async function doSend(txt){
+  if(!txt)return;
+  const ctx=dealer?`[Dealer:${dealer.dealerName}|Contact:${CONTACTS.find(c=>c.id===contact)?.label}|ITD Step ${step}:${STEPS[step-1]?.label}|Hurts:${hurts.join('; ')||'none'}]\n\n`:'';
+  addMsg('rep',txt);
+  document.getElementById('chatIn').disabled=true;
+  document.getElementById('sendBtn').disabled=true;
+  showTyping();
+  try{
+    const full=ctx+txt;
+    const reply=await claude(full);
+    removeTyping();
+    history.push({role:"user",content:full},{role:"assistant",content:reply});
+    if(history.length>32)history=history.slice(-28);
+    extractHurts(reply);
+    addMsg('ai',reply,getChips());
+  }catch(e){removeTyping();addMsg('ai','Error — try again.');}
+  document.getElementById('chatIn').disabled=false;
+  document.getElementById('sendBtn').disabled=false;
+  document.getElementById('chatIn').focus();
+}
+
+// ══════════════════════════════════════════════════════════
+// CHIPS
+// ══════════════════════════════════════════════════════════
+function getChips(){
+  const s=STEPS[step-1],cn=CONTACTS.find(c=>c.id===contact)?.label||'contact',dn=dealer?.dealerName||'dealer';
+  const sets={
+    1:[{l:"💬 Hurt Discovery Questions",a:`5 Hurt Discovery questions for the ${cn} at ${dn} — no CDK mention`,c:'p'},
+       {l:"📞 Opening Call Script",a:`Exact opening call script for Step 1 with the ${cn} — 60 seconds, no pitch`,c:'blue'},
+       {l:"➡️ Qualify (Step 2)",a:`How do I qualify this opportunity with the ${cn}?`,c:''}],
+    2:[{l:"✅ Qualify Checklist",a:`What confirms this is a qualified opportunity at ${dn}?`,c:'p'},
+       {l:"⚠️ Disqualify Signs",a:`What signals tell me to walk away from ${dn}?`,c:''},
+       {l:"➡️ Amplify (Step 3)",a:`Qualified. Walk me through Step 3 — Amplify the Hurt`,c:'grn'}],
+    3:[{l:"💰 Monetize the Hurt",a:`Dollar-specific monetization examples for ${cn}'s Hurts at ${dn}`,c:'p'},
+       {l:"🔗 Chain the Hurts",a:`How do I chain the ${cn}'s Hurts together for maximum decision energy?`,c:'blue'},
+       {l:"👤 Personalize",a:`How do I personalize the Hurt for the ${cn} specifically?`,c:''},
+       {l:"➡️ Generic Solution (Step 4)",a:`Ready for Step 4 — generic solution script, no CDK mention`,c:'grn'}],
+    4:[{l:"🗣 Generic Solution Script",a:`Exact generic solution script — I cannot say CDK we or I`,c:'p'},
+       {l:"📧 Follow-Up Email",a:`Write a follow-up email to the ${cn} after this conversation — no CDK pitch, restates their Hurt`,c:'pur'},
+       {l:"➡️ Buy-In Signals",a:`How do I recognize Buy-In from the ${cn}?`,c:'grn'}],
+    5:[{l:"🎯 Buy-In Signals",a:`What Buy-In signals am I looking for from the ${cn} at ${dn}?`,c:'p'},
+       {l:"💣 E-Bomb Defense",a:`What E-Bombs will Autosoft drop? Give me sword and shield for ${dn}`,c:''},
+       {l:"📧 Arm the Advocate",a:`Write an email I can give the ${cn} to send the owner — internal advocate message`,c:'pur'},
+       {l:"➡️ Demo (Step 6)",a:`Buy-In confirmed. How do I structure the CDK demo for ${dn}?`,c:'grn'}],
+    6:[{l:"🖥 Demo Structure",a:`Full CDK demo structure for ${dn} — Hurt Restate, Generic Solution, Proof`,c:'p'},
+       {l:"💣 Handle E-Bombs",a:`Autosoft pushing back during demo at ${dn}. What do I say?`,c:''},
+       {l:"📞 Post-Demo Call Script",a:`Call script for 48 hours after the demo — keep momentum`,c:'blue'}],
+    7:[{l:"🛠 Tailoring Questions",a:`What questions get the ${cn} customizing CDK to their workflow?`,c:'p'},
+       {l:"🤝 Transfer Ownership",a:`How do I transfer decision ownership from me to the customer at ${dn}?`,c:'blue'}],
+    8:[{l:"✅ Validate Conviction",a:`How do I test the UDM's conviction level at ${dn}?`,c:'p'},
+       {l:"👑 Brief the Owner",a:`Internal team is sold at ${dn}. Coach me on getting the owner to yes.`,c:'grn'},
+       {l:"📧 Owner Pre-Meeting Email",a:`Write a pre-meeting email to prepare the owner at ${dn} for the contract conversation`,c:'pur'}],
+    9:[{l:"📝 Contract Non-Event",a:`How do I make signing feel natural at ${dn}?`,c:'p'},
+       {l:"⚠️ Owner Hesitating",a:`Owner at ${dn} is hesitating at contract. What do I do now?`,c:''}],
+    10:[{l:"🚀 Implementation Plan",a:`What do I do to ensure a great go-live at ${dn}?`,c:'p'},
+        {l:"🌾 Farm the Account",a:`How do I grow and farm ${dn} long-term after go-live?`,c:'blue'}]
+  };
+  return(sets[step]||[]);
+}
+
+// ══════════════════════════════════════════════════════════
+// COMMS HUB
+// ══════════════════════════════════════════════════════════
+function buildCommsUI(){
+  const el=document.getElementById('commsContent');
+  if(!dealer){el.innerHTML=`<div class="no-dealer"><div class="ni">📧</div><p>Analyze a dealer first, then generate follow-up emails and call scripts here.</p></div>`;return;}
+  const cn=CONTACTS.find(c=>c.id===contact)?.label||'Contact';
+  el.innerHTML=`
+    <div class="section-hdr">Generate for: ${dealer.dealerName} · ${cn}</div>
+    <div class="gen-row">
+      <div class="gen-card" onclick="genComm('followup_email')"><div class="gen-icon">📧</div><div class="gen-label">Follow-Up Email</div><div class="gen-sub">After a visit</div></div>
+      <div class="gen-card" onclick="genComm('call_script')"><div class="gen-icon">📞</div><div class="gen-label">Call Script</div><div class="gen-sub">Next check-in call</div></div>
+      <div class="gen-card" onclick="genComm('advocate_email')"><div class="gen-icon">🤝</div><div class="gen-label">Advocate Email</div><div class="gen-sub">For ${cn} to send owner</div></div>
+      <div class="gen-card" onclick="genComm('reengagement')"><div class="gen-icon">🔄</div><div class="gen-label">Re-Engagement</div><div class="gen-sub">When deal goes quiet</div></div>
+      <div class="gen-card" onclick="genComm('ebomb_response')"><div class="gen-icon">💣</div><div class="gen-label">E-Bomb Response</div><div class="gen-sub">Counter Autosoft pushback</div></div>
+      <div class="gen-card" onclick="genComm('owner_email')"><div class="gen-icon">👑</div><div class="gen-label">Owner Email</div><div class="gen-sub">Pre-meeting warm-up</div></div>
+    </div>
+    <div id="commOutput"></div>`;
+}
+
+async function genComm(type){
+  const dn=dealer?.dealerName||'dealer',cn=CONTACTS.find(c=>c.id===contact)?.label||'contact';
+  const typeLabels={followup_email:'Follow-Up Email',call_script:'Check-In Call Script',advocate_email:'Advocate Email (for '+cn+' to send owner)',reengagement:'Re-Engagement Script',ebomb_response:'E-Bomb Response',owner_email:'Owner Pre-Meeting Email'};
+  const out=document.getElementById('commOutput');
+  out.innerHTML=`<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">Generating ${typeLabels[type]}…</div>`;
+
+  const prompts={
+    followup_email:`Write a short professional follow-up email from the CDK sales rep to the ${cn} at ${dealer.dealerName} after an initial Hurt Discovery meeting. Current ITD step: ${step}. Documented hurts: ${hurts.join(', ')||'none yet'}. Rules: do not mention CDK or pitch a product in early steps. Restate their pain in their own words. Keep it under 120 words. Subject line included. Format as EMAIL: [subject]\n[body]`,
+    call_script:`Write a 2-minute check-in call script for the CDK rep to call the ${cn} at ${dealer.dealerName}. Current ITD step: ${step}. Documented hurts: ${hurts.join(', ')||'none yet'}. Goal: keep momentum, advance to next step. No pitching in emotional phase. Format as CALLSCRIPT: [opening]\n[body]\n[close]`,
+    advocate_email:`Write an internal email that the ${cn} at ${dealer.dealerName} could forward to their owner/dealer principal. It should come from their perspective, mention specific operational frustrations, and suggest exploring a DMS change. Do not make it sound like a CDK sales pitch — it should sound like a genuine employee concern. Under 100 words. Format as ADVOCATEEMAIL: [subject]\n[body]`,
+    reengagement:`Write a re-engagement call script AND short email for a CDK rep reaching out to the ${cn} at ${dealer.dealerName} after 2-3 weeks of silence. The deal has gone quiet. Tone: curious not pushy. Reference their original Hurts. Format as CALLSCRIPT: [script] then EMAIL: [subject]\n[body]`,
+    ebomb_response:`The ${cn} at ${dealer.dealerName} just received a call from Autosoft offering to reduce their price now that CDK is in the picture. Write a script for the CDK rep to call the contact and neutralize this E-Bomb. Also write a short email follow-up. Format as CALLSCRIPT: [script] then EMAIL: [subject]\n[body]`,
+    owner_email:`Write a short pre-meeting email from the CDK rep to the owner/dealer principal at ${dealer.dealerName}. The owner has been hearing from their controller and service manager about operational frustrations. This email sets up a meeting. Do not pitch CDK heavily — create curiosity. Under 100 words. Format as EMAIL: [subject]\n[body]`
+  };
+
+  try{
+    const reply=await claude(prompts[type]);
+    history.push({role:"user",content:prompts[type]},{role:"assistant",content:reply});
+    if(history.length>32)history=history.slice(-28);
+
+    // Parse and display
+    out.innerHTML='';
+    const sections=reply.split(/(?=EMAIL:|CALLSCRIPT:|ADVOCATEEMAIL:)/g).filter(s=>s.trim());
+    sections.forEach(sec=>{
+      const isEmail=sec.startsWith('EMAIL:')||sec.startsWith('ADVOCATEEMAIL:');
+      const isCall=sec.startsWith('CALLSCRIPT:');
+      const icon=isEmail?'📧':isCall?'📞':'📋';
+      const lbl=isEmail?'Email':isCall?'Call Script':'Communication';
+      const body=sec.replace(/^(EMAIL:|CALLSCRIPT:|ADVOCATEEMAIL:)/,'').trim();
+      const card=document.createElement('div');
+      card.className='comm-card';
+      card.innerHTML=`<div class="cc-type" style="color:var(--${isEmail?'purple':isCall?'blue':'gold'})">${icon} ${lbl}</div><div class="cc-body" id="cb-${Math.random().toString(36).substr(2,6)}">${body}</div><div class="cc-btns"><button class="cc-btn copy" onclick="copyComm(this)">📋 Copy</button></div>`;
+      out.appendChild(card);
+    });
+  }catch(e){out.innerHTML=`<div style="color:var(--red);font-size:12px;padding:12px">Error generating. Try again.</div>`;}
+}
+
+function copyComm(btn){
+  const body=btn.closest('.comm-card').querySelector('.cc-body');
+  navigator.clipboard?.writeText(body.textContent).then(()=>showToast()).catch(()=>{
+    const r=document.createRange();r.selectNode(body);window.getSelection().removeAllRanges();window.getSelection().addRange(r);document.execCommand('copy');window.getSelection().removeAllRanges();showToast();
+  });
+}
+
+function showToast(){
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+// ══════════════════════════════════════════════════════════
+// DEALS TRACKER
+// ══════════════════════════════════════════════════════════
+function updateDealsPanel(){
+  const closed=deals.filter(d=>d.closed).length;
+  const active=deals.filter(d=>!d.closed).length;
+  const needed=Math.max(0,5-closed);
+  document.getElementById('dealsActive').textContent=active;
+  document.getElementById('dealsClosed').textContent=closed;
+  document.getElementById('dealsNeeded').textContent=needed;
+  document.getElementById('goalBar').style.width=(closed/5*100)+'%';
+  document.getElementById('goalText').textContent=`${closed} of 5 closed · ${needed} remaining to hit Dec 1st goal`;
+
+  const list=document.getElementById('dealsList');
+  if(!deals.length){list.innerHTML=`<div class="empty-deals"><div class="ei">📋</div><p>Deals appear here when you analyze a dealer.</p></div>`;return;}
+  list.innerHTML=deals.map((d,i)=>`
+    <div class="deal-card" onclick="loadDeal(${i})">
+      <div class="deal-top"><div class="deal-name">${d.name}</div><div class="deal-score">${d.score}</div></div>
+      <div class="deal-meta">${d.brand} · ${d.location} · Step ${d.step}/10: ${STEPS[d.step-1]?.label}</div>
+      <div class="deal-prog"><div class="deal-bar" style="width:${d.step/10*100}%"></div></div>
+      <div class="deal-contacts">
+        ${Object.entries(d.contacts).map(([k,v])=>`<span class="dc-chip ${v==='warm'?'dcc-warm':v==='hot'?'dcc-hot':'dcc-cold'}">${CONTACTS.find(c=>c.id===k)?.icon} ${v}</span>`).join('')}
+        ${d.closed?'<span class="dc-chip dcc-hot">✅ CLOSED</span>':''}
+      </div>
+    </div>`).join('');
+}
+
+function loadDeal(i){
+  const d=deals[i];
+  document.getElementById('dealerUrl').value=d.name.toLowerCase().replace(/\s/g,'');
+  showTab('coach');
+}
+
+// ══════════════════════════════════════════════════════════
+// PLAYBOOK
+// ══════════════════════════════════════════════════════════
+function buildPlaybook(){
+  const el=document.getElementById('playbookContent');
+  let html='';
+  let lastPh='';
+  STEPS.forEach(s=>{
+    if(s.phase!==lastPh){
+      const m=PHASE_META[s.phase];
+      html+=`<div class="ph-hdr ${m.cls}" style="margin-bottom:8px">${m.label}</div>`;
+      lastPh=s.phase;
+    }
+    const numCls=s.phase==='em'?'em':s.phase==='buy'?'bu':s.phase==='rat'?'ra':'ex';
+    html+=`<div class="pb-step">
+      <div class="pb-hdr" onclick="togglePB(${s.id})">
+        <div class="pb-left">
+          <div class="pb-num ${numCls}">${s.id}</div>
+          <div class="pb-info"><div class="pb-title">${s.label}</div><div class="pb-phase">${s.ph}</div></div>
+        </div>
+        <div class="pb-arrow" id="pa-${s.id}">▼</div>
+      </div>
+      <div class="pb-body" id="pb-${s.id}">
+        <div class="pb-goal"><b>GOAL:</b> ${s.goal}</div>
+        ${s.rules.map(r=>`<div class="pb-rule">${r}</div>`).join('')}
+        <button class="chip p" style="margin-top:10px" onclick="coachStep(${s.id})">🎯 Coach me on Step ${s.id}</button>
+      </div>
+    </div>`;
+  });
+  el.innerHTML=html;
+}
+
+function togglePB(id){
+  const body=document.getElementById('pb-'+id);
+  const arrow=document.getElementById('pa-'+id);
+  const open=body.classList.toggle('open');
+  arrow.style.transform=open?'rotate(180deg)':'';
+}
+
+function coachStep(n){
+  showTab('coach');
+  setStep(n);
+  if(dealer){
+    const cn=CONTACTS.find(c=>c.id===contact)?.label;
+    doSend(`Coach me on Step ${n}: ${STEPS[n-1].label} with the ${cn} at ${dealer.dealerName}. What do I do and say right now?`);
+  }else{
+    doSend(`Explain Step ${n}: ${STEPS[n-1].label} — what is the goal, what do I do, and give me an example script for a Controller at a small Autosoft Ford dealer.`);
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// UI HELPERS
+// ══════════════════════════════════════════════════════════
+function addMsg(role,text,chips=[]){
+  const wrap=document.getElementById('msgs');
+  const d=document.createElement('div');
+  d.className=`msg ${role}`;
+  let html=text
+    .replace(/\*\*(.*?)\*\*/g,'<b>$1</b>')
+    .replace(/\*(.*?)\*/g,'<i>$1</i>')
+    .replace(/SCRIPT:([\s\S]*?)(?=\n\n|\n[A-Z]{3,}:|$)/g,(_,p)=>`<div class="sc-card"><div class="clbl">📢 Script</div>${p.trim()}</div>`)
+    .replace(/EMAIL:([\s\S]*?)(?=\n\n|\n[A-Z]{3,}:|$)/g,(_,p)=>`<div class="em-card"><div class="clbl">📧 Email</div>${p.trim()}</div>`)
+    .replace(/CALLSCRIPT:([\s\S]*?)(?=\n\n|\n[A-Z]{3,}:|$)/g,(_,p)=>`<div class="sc-card"><div class="clbl">📞 Call Script</div>${p.trim()}</div>`)
+    .replace(/ADVOCATEEMAIL:([\s\S]*?)(?=\n\n|\n[A-Z]{3,}:|$)/g,(_,p)=>`<div class="em-card"><div class="clbl">🤝 Advocate Email</div>${p.trim()}</div>`)
+    .replace(/HURT:([\s\S]*?)(?=\n\n|\n[A-Z]{3,}:|$)/g,(_,p)=>`<div class="hc-card"><div class="clbl">⚠️ Documented Hurt</div>${p.trim()}</div>`)
+    .replace(/AMPLIFY:([\s\S]*?)(?=\n\n|\n[A-Z]{3,}:|$)/g,(_,p)=>`<div class="ac-card"><div class="clbl">💰 Amplify</div>${p.trim()}</div>`)
+    .replace(/EBOMB:([\s\S]*?)(?=\n\n|\n[A-Z]{3,}:|$)/g,(_,p)=>`<div class="ec-card"><div class="clbl">💣 E-Bomb Defense</div>${p.trim()}</div>`)
+    .replace(/\n/g,'<br>');
+  const chipsHtml=chips.length?`<div class="chips">${chips.map(c=>`<button class="chip ${c.c||''}" onclick="chipTap(this,'${c.a.replace(/'/g,"\\'")}') ">${c.l}</button>`).join('')}</div>`:'';
+  d.innerHTML=`<div class="av ${role}">${role==='ai'?'SE':'YOU'}</div><div class="bub">${html}${chipsHtml}</div>`;
+  wrap.appendChild(d);
+  wrap.scrollTop=wrap.scrollHeight;
+}
+
+function chipTap(btn,action){btn.style.opacity='.4';btn.style.pointerEvents='none';doSend(action);}
+
+function showTyping(){
+  const w=document.getElementById('msgs');
+  const d=document.createElement('div');
+  d.className='typing';d.id='typ';
+  d.innerHTML=`<div class="av ai">SE</div><div class="tb2"><span></span><span></span><span></span></div>`;
+  w.appendChild(d);w.scrollTop=w.scrollHeight;
+}
+function removeTyping(){document.getElementById('typ')?.remove();}
+
+function setStep(n){
+  step=n;
+  const s=STEPS[n-1];
+  document.getElementById('stepDisp').textContent=n;
+  document.getElementById('stepPill').textContent=`STEP ${n}: ${s.short}`;
+  STEPS.forEach(x=>{
+    const el=document.getElementById(`sr-${x.id}`);
+    if(!el)return;
+    el.className='sr';
+    if(x.id<n)el.className+=' done';
+    if(x.id===n)el.className+=' act';
+  });
+  // Update active deal step
+  if(dealer){const d=deals.find(x=>x.name===dealer.dealerName);if(d){d.step=n;updateDealsPanel();}}
+}
+
+function jumpStep(n){
+  if(!dealer)return;
+  setStep(n);
+  const cn=CONTACTS.find(c=>c.id===contact)?.label;
+  doSend(`Moving to Step ${n}: ${STEPS[n-1].label} with the ${cn} at ${dealer.dealerName}. Coach me — what exactly do I do and say?`);
+  closeDrawer();
+}
+
+function setContact(id){
+  contact=id;
+  CONTACTS.forEach(c=>{const b=document.getElementById(`cb-${c.id}`);if(b)b.className=`cbt${c.id===id?' act':''}`;});
+  if(dealer){
+    const cn=CONTACTS.find(c=>c.id===id);
+    doSend(`Switching focus to the ${cn.label} at ${dealer.dealerName}. What are their likely Hurts and how do I open at Step ${step}?`);
+    closeDrawer();
+    buildCommsUI();
+  }
+}
+
+function extractHurts(text){
+  const m=text.match(/HURT:\s*(.+?)(?=\n|$)/gi)||[];
+  m.forEach(x=>{
+    const h=x.replace(/HURT:\s*/i,'').trim();
+    if(h&&!hurts.includes(h)&&h.length>8){
+      hurts.push(h);
+      document.getElementById('hurtList').innerHTML=hurts.map(h=>`<div style="display:flex;gap:6px;margin-bottom:7px;font-size:11px"><span>⚠️</span><span style="color:var(--t2);line-height:1.5">${h}</span></div>`).join('')
+        +`<button class="chip p" style="margin-top:6px;width:100%;font-size:10px" onclick="doSend('I have documented these Hurts: ${hurts.join('; ')}. How do I use all of them to build the case for the owner at ${dealer?.dealerName}?')">📋 Brief owner on all Hurts</button>`;
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+// INIT PLAYBOOK ON LOAD
+// ══════════════════════════════════════════════════════════
+buildPlaybook();
+updateDealsPanel();
+</script>
+</body>
+</html>
